@@ -27,25 +27,33 @@ const DocumentPreview: React.FC<{ documentUrl: string; title: string }> = ({ doc
       <CardHeader>
         <CardTitle className="text-base">{title}</CardTitle>
       </CardHeader>
-      <CardContent className="bg-gray-100 rounded-md flex items-center justify-between h-48 px-4">
+      <CardContent className="rounded-md flex flex-col items-center justify-between  px-4 ">
         {documentUrl ? (
           <>
-            <a
-              href={documentUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-600 text-sm break-all underline max-w-[85%]"
-            >
-              {documentUrl}
-            </a>
-            <Button
-              size="icon"
-              variant="ghost"
-              onClick={handleCopy}
-              className="hover:bg-muted p-2"
-            >
-              <ClipboardCopy className="w-4 h-4" />
-            </Button>
+            <iframe
+              src={documentUrl}
+              title="Document Preview"
+              className="w-full h-full border rounded-md "
+              sandbox="allow-same-origin allow-scripts"
+            />
+            {/* <div className="flex items-center justify-between w-full">
+              <a
+                href={documentUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 text-sm break-all underline max-w-[85%]"
+              >
+                {documentUrl}
+              </a>
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={handleCopy}
+                className="hover:bg-muted p-2"
+              >
+                <ClipboardCopy className="w-4 h-4" />
+              </Button>
+            </div> */}
           </>
         ) : (
           <p className="text-muted-foreground text-sm text-center w-full">No document available</p>

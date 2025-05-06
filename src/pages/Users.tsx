@@ -90,100 +90,98 @@ const mockUsers = [
 const Users = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredUsers = mockUsers.filter(user => 
+  const filteredUsers = mockUsers.filter(user =>
     user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
     user.role.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
-    <AdminLayout>
-      <div className="flex flex-col gap-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Users</h1>
-          <p className="text-muted-foreground">Manage system users and their permissions</p>
-        </div>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <div>
-              <CardTitle>User Management</CardTitle>
-              <CardDescription>A list of all users in the system</CardDescription>
-            </div>
-            <Button className="bg-rbi-accent hover:bg-rbi-accent/80">
-              <UserPlus className="mr-2 h-4 w-4" />
-              Add User
-            </Button>
-          </CardHeader>
-          <CardContent>
-            <div className="flex items-center py-4">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-                <Input 
-                  placeholder="Search users..." 
-                  value={searchQuery} 
-                  onChange={(e) => setSearchQuery(e.target.value)} 
-                  className="pl-10 max-w-sm"
-                />
-              </div>
-            </div>
-
-            <div className="rounded-md border overflow-hidden">
-              <Table>
-                <TableHeader className="bg-muted">
-                  <TableRow>
-                    <TableHead className="font-medium">Name</TableHead>
-                    <TableHead className="font-medium">Email</TableHead>
-                    <TableHead className="font-medium">Role</TableHead>
-                    <TableHead className="font-medium">Status</TableHead>
-                    <TableHead className="font-medium">Last Login</TableHead>
-                    <TableHead className="text-right font-medium">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredUsers.map((user) => (
-                    <TableRow key={user.id}>
-                      <TableCell className="font-medium">{user.name}</TableCell>
-                      <TableCell>{user.email}</TableCell>
-                      <TableCell>
-                        <Badge variant={user.role === 'Admin' ? 'secondary' : 'outline'}>
-                          {user.role}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant={user.status === 'Active' ? 'default' : 'outline'} className={user.status === 'Active' ? 'bg-rbi-success' : 'text-muted-foreground'}>
-                          {user.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>{user.lastLogin}</TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                              <MoreHorizontal className="h-4 w-4" />
-                              <span className="sr-only">Open menu</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem>Edit</DropdownMenuItem>
-                            <DropdownMenuItem>Reset Password</DropdownMenuItem>
-                            {user.status === 'Active' ? (
-                              <DropdownMenuItem className="text-rbi-danger">Deactivate</DropdownMenuItem>
-                            ) : (
-                              <DropdownMenuItem className="text-rbi-success">Activate</DropdownMenuItem>
-                            )}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </CardContent>
-        </Card>
+    <div className="flex flex-col gap-6">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">Users</h1>
+        <p className="text-muted-foreground">Manage system users and their permissions</p>
       </div>
-    </AdminLayout>
+
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between pb-2">
+          <div>
+            <CardTitle>User Management</CardTitle>
+            <CardDescription>A list of all users in the system</CardDescription>
+          </div>
+          <Button className="bg-rbi-accent hover:bg-rbi-accent/80">
+            <UserPlus className="mr-2 h-4 w-4" />
+            Add User
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center py-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+              <Input
+                placeholder="Search users..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 max-w-sm"
+              />
+            </div>
+          </div>
+
+          <div className="rounded-md border overflow-hidden">
+            <Table>
+              <TableHeader className="bg-muted">
+                <TableRow>
+                  <TableHead className="font-medium">Name</TableHead>
+                  <TableHead className="font-medium">Email</TableHead>
+                  <TableHead className="font-medium">Role</TableHead>
+                  <TableHead className="font-medium">Status</TableHead>
+                  <TableHead className="font-medium">Last Login</TableHead>
+                  <TableHead className="text-right font-medium">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredUsers.map((user) => (
+                  <TableRow key={user.id}>
+                    <TableCell className="font-medium">{user.name}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>
+                      <Badge variant={user.role === 'Admin' ? 'secondary' : 'outline'}>
+                        {user.role}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={user.status === 'Active' ? 'default' : 'outline'} className={user.status === 'Active' ? 'bg-rbi-success' : 'text-muted-foreground'}>
+                        {user.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{user.lastLogin}</TableCell>
+                    <TableCell className="text-right">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <MoreHorizontal className="h-4 w-4" />
+                            <span className="sr-only">Open menu</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem>Edit</DropdownMenuItem>
+                          <DropdownMenuItem>Reset Password</DropdownMenuItem>
+                          {user.status === 'Active' ? (
+                            <DropdownMenuItem className="text-rbi-danger">Deactivate</DropdownMenuItem>
+                          ) : (
+                            <DropdownMenuItem className="text-rbi-success">Activate</DropdownMenuItem>
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

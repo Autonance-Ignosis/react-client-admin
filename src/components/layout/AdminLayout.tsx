@@ -13,7 +13,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ThemeToggle } from '../theme/ThemeToggle';
-import { useAuth } from '../../context/AuthContext';
+import { useSelector } from 'react-redux';
+import Logout from '../auth/Logout';
+import LoginButton from '../auth/Login';
+
 
 interface AdminLayoutProps {
   children: React.ReactNode;
@@ -22,7 +25,7 @@ interface AdminLayoutProps {
 const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const { user, logout } = useAuth();
+  const { user } = useSelector((state: any) => state.user);
 
   const navItems = [
     { name: 'Dashboard', path: '/', icon: <BarChart2 size={20} /> },
@@ -33,14 +36,12 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
 
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
-  const handleLogout = () => {
-    logout();
-  };
+
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-background">
       {/* Sidebar */}
-      <div 
+      <div
         className={`bg-card shadow-md overflow-y-auto transition-all duration-300 ease-in-out
                    ${isSidebarOpen ? 'w-64' : 'w-0 md:w-16'} 
                    fixed md:sticky top-0 bottom-0 left-0 z-40 h-screen`}
@@ -51,7 +52,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             <h2 className={`text-white font-bold text-xl whitespace-nowrap ${!isSidebarOpen && 'md:hidden'}`}>RBI Admin Portal</h2>
             {!isSidebarOpen && <h2 className="text-white font-bold text-xl hidden md:block">RBI</h2>}
           </div>
-          
+
           {/* Navigation */}
           <nav className="py-6 flex-grow">
             <ul className="space-y-1 px-2">
@@ -61,9 +62,9 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                     to={item.path}
                     className={`flex items-center px-4 py-3 rounded-md transition-colors
                               ${location.pathname === item.path
-                                ? 'bg-accent text-accent-foreground'
-                                : 'text-foreground hover:bg-muted'
-                              }
+                        ? 'bg-accent text-accent-foreground'
+                        : 'text-foreground hover:bg-muted'
+                      }
                               ${!isSidebarOpen ? 'justify-center md:justify-center' : 'justify-start'}`}
                   >
                     <span className="mr-3">{item.icon}</span>
@@ -73,7 +74,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
               ))}
             </ul>
           </nav>
-          
+
           {/* Footer */}
           <div className="p-4 border-t border-border">
             <div className={`flex ${isSidebarOpen ? 'items-center justify-between' : 'justify-center'}`}>
@@ -87,10 +88,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                 </div>
               </div>
               {isSidebarOpen && (
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="md:hidden" 
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="md:hidden"
                   onClick={toggleSidebar}
                 >
                   <ChevronDown size={18} />
@@ -107,10 +108,10 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         <header className="bg-card shadow-sm sticky top-0 z-30">
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center">
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={toggleSidebar} 
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={toggleSidebar}
                 className="mr-4"
               >
                 <Menu size={20} />
@@ -130,29 +131,15 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                 <Bell size={20} />
                 <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full"></span>
               </Button>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center">
-                    <Avatar className="h-8 w-8 mr-2">
-                      <AvatarImage src="/placeholder.svg" />
-                      <AvatarFallback>{user?.name?.substring(0, 2) || 'AD'}</AvatarFallback>
-                    </Avatar>
-                    <span className="hidden md:inline">{user?.name?.split(' ')[0] || 'Admin'}</span>
-                    <ChevronDown className="ml-2" size={16} />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuItem>Settings</DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-red-500 cursor-pointer" onClick={handleLogout}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Logout
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+
+              {
+                user ? (
+                  <Logout />
+                ) :
+                  <LoginButton />
+
+
+              }
             </div>
           </div>
         </header>

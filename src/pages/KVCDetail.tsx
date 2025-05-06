@@ -23,7 +23,7 @@ const KVCDetail = () => {
 
           const response2 = await axios.get(`http://localhost:8082/api/kyc/status/${id}`);
           const kycdata = response2.data;
-          
+
           setKvcUserDetail({
             id: userData.id?.toString() || 'Not Provided',
             requestId: `REQ-${userData.id || 'Not Provided'}`,
@@ -48,7 +48,7 @@ const KVCDetail = () => {
           });
 
           setKvcDetail(kycdata);
-          
+
         } catch (error) {
           console.error('Error fetching KYC details:', error);
         }
@@ -65,7 +65,7 @@ const KVCDetail = () => {
 
   const handleStatusChange = (id: string, status: 'VERIFIED' | 'REJECTED', comments?: string) => {
     console.log(`Status change for ${id}: ${status}, Comments: ${comments}`);
-    
+
     if (kvcUserDetail) {
       setKvcUserDetail({
         ...kvcUserDetail,
@@ -76,25 +76,25 @@ const KVCDetail = () => {
 
   if (loading) {
     return (
-      <AdminLayout>
-        <div className="flex items-center justify-center min-h-[60vh]">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
-        </div>
-      </AdminLayout>
+      // <AdminLayout>
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+      </div>
+      // </AdminLayout>
     );
   }
 
   return (
-    <AdminLayout>
+    <div>
       {kvcUserDetail && (
-        <KVCDetailView 
+        <KVCDetailView
           kycUserDetail={kvcUserDetail}
           onBack={handleBack}
           onStatusChange={handleStatusChange}
           kycDetail={kvcDetail}
         />
       )}
-    </AdminLayout>
+    </div>
   );
 };
 

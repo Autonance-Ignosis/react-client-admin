@@ -22,21 +22,20 @@ const KVCRequests = () => {
         setLoading(false);
       }
     };
-  
+
     fetchKVCRequests();
   }, []);
 
   return (
-    <AdminLayout>
-      <div className="flex flex-col gap-6">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">KVC Requests</h1>
-          <p className="text-muted-foreground">Manage and review all customer verification requests</p>
-        </div>
-        
-        <KVCRequestList requests={KycRequests} />
+
+    <div className="flex flex-col gap-6">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">KVC Requests</h1>
+        <p className="text-muted-foreground">Manage and review all customer verification requests</p>
       </div>
-    </AdminLayout>
+
+      <KVCRequestList requests={KycRequests} />
+    </div>
   );
 };
 

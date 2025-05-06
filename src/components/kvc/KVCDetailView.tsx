@@ -79,7 +79,7 @@ const KVCDetailView: React.FC<KVCDetailViewProps> = ({ onBack, onStatusChange, k
   const handleAutomateKycVerification = async () => {
     try {
       const panImageUrl = kycDetail.panFileUrl;
-  
+
       const response1 = await axios.post('http://localhost:5000/kyc/pan', {
         url: panImageUrl
       }, {
@@ -87,27 +87,27 @@ const KVCDetailView: React.FC<KVCDetailViewProps> = ({ onBack, onStatusChange, k
           'Content-Type': 'application/json'
         }
       });
-  
+
       const { message, pan_number } = response1.data;
-  
+
       if (!pan_number) {
         console.error("PAN number could not be extracted.");
         return;
       }
-  
+
       const response2 = await axios.post("http://localhost:8082/api/kyc/validate-pan", {
         pan: pan_number
       });
-  
+
       const { statusCode, isAadhaarLinked } = response2.data;
 
       if (statusCode === 101 && isAadhaarLinked) {
         console.log("✅ PAN is valid and Aadhaar is linked.");
-      
-        const userId = kycDetail.userId; 
+
+        const userId = kycDetail.userId;
         const status = "VERIFIED";
         const remarks = "Auto-verified as PAN is valid and Aadhaar is linked.";
-      
+
         try {
           const updateResponse = await axios.put(`http://localhost:8082/api/kyc/update/${userId}`, null, {
             params: {
@@ -120,10 +120,10 @@ const KVCDetailView: React.FC<KVCDetailViewProps> = ({ onBack, onStatusChange, k
           console.error("❌ Failed to update KYC status:", err);
         }
       } else {
-        const userId = kycDetail.userId; 
+        const userId = kycDetail.userId;
         const status = "REJECTED";
         const remarks = "PAN Card or AadhaarCard is Invalid";
-      
+
         try {
           const updateResponse = await axios.put(`http://localhost:8082/api/kyc/update/${userId}`, null, {
             params: {
@@ -137,16 +137,16 @@ const KVCDetailView: React.FC<KVCDetailViewProps> = ({ onBack, onStatusChange, k
         }
       }
 
-      
-  
+
+
     } catch (error) {
       console.error("Error during automated KYC verification:", error);
     }
   };
-  
+
 
   if (!kycUserDetail) {
-    return <div>Loading...</div>; 
+    return <div>Loading...</div>;
   }
 
   return (
@@ -157,16 +157,16 @@ const KVCDetailView: React.FC<KVCDetailViewProps> = ({ onBack, onStatusChange, k
           <h2 className="text-2xl font-bold tracking-tight">KVC Request Details</h2>
           <p className="text-muted-foreground">Request ID: {kycUserDetail.requestId}</p>
         </div>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={onBack}>
-              Back to All Requests
+        <div className="flex items-center gap-2">
+          <Button variant="outline" onClick={onBack}>
+            Back to All Requests
+          </Button>
+          {activeTab === 'documents' && (
+            <Button variant="secondary" onClick={handleAutomateKycVerification}>
+              Verify KYC
             </Button>
-              {activeTab === 'documents' && (
-                  <Button variant="secondary" onClick={handleAutomateKycVerification}>
-                    Verify KYC
-                  </Button>
-              )}
-          </div>
+          )}
+        </div>
       </div>
 
       <div className="flex items-center justify-between">
@@ -177,7 +177,7 @@ const KVCDetailView: React.FC<KVCDetailViewProps> = ({ onBack, onStatusChange, k
       </div>
 
       <Tabs defaultValue="details" value={activeTab} onValueChange={setActiveTab} className="w-full">
-      <TabsList className="w-full sm:w-auto">
+        <TabsList className="w-full sm:w-auto">
           <TabsTrigger value="details" className="flex-1 sm:flex-initial">Personal Details</TabsTrigger>
           <TabsTrigger value="documents" className="flex-1 sm:flex-initial">Documents</TabsTrigger>
         </TabsList>
@@ -282,23 +282,23 @@ const KVCDetailView: React.FC<KVCDetailViewProps> = ({ onBack, onStatusChange, k
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <DocumentPreview
-                documentUrl={kycUserDetail.documents.idProof}
-                title="ID Proof"
-              />
-              <DocumentPreview
-                documentUrl={kycUserDetail.documents.addressProof}
-                title="Address Proof"
-              />
-              <DocumentPreview
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
+                <DocumentPreview
+                  documentUrl={kycUserDetail.documents.idProof}
+                  title="PAN Card"
+                />
+                <DocumentPreview
+                  documentUrl={kycUserDetail.documents.addressProof}
+                  title="Aadhaar Card"
+                />
+                {/* <DocumentPreview
                 documentUrl={kycUserDetail.documents.photo}
                 title="Photograph"
               />
               <DocumentPreview
                 documentUrl={kycUserDetail.documents.signature}
                 title="Signature"
-              />
+              /> */}
 
               </div>
             </CardContent>

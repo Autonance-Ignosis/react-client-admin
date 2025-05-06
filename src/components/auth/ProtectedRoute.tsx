@@ -1,13 +1,14 @@
 
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+
 import { toast } from 'sonner';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated, isLoading, user } = useAuth();
+  const { user } = useSelector((state: any) => state.user) || {};
 
-  if (isLoading) {
+  if (!user) {
     return (
       <div className="flex h-screen w-full items-center justify-center">
         <div className="text-center">
@@ -18,12 +19,12 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
     );
   }
 
-  if (!isAuthenticated) {
+  if (user && user.role !== 'ADMIN') {
     // Check if user exists but is not an admin
     if (user && user.role !== 'admin') {
       toast.error("You are not authorized to access this admin panel");
     }
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;
