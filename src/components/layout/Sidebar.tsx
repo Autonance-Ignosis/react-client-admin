@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Home,
   FileText,
@@ -16,9 +16,9 @@ import {
   ChevronLeft,
   FileClock,
   User,
-  BarChart2
-} from 'lucide-react';
-import { useSelector } from 'react-redux';
+  BarChart2,
+} from "lucide-react";
+import { useSelector } from "react-redux";
 
 type SidebarProps = {
   className?: string;
@@ -45,9 +45,9 @@ export function Sidebar({ className }: SidebarProps) {
     };
 
     checkIfMobile();
-    window.addEventListener('resize', checkIfMobile);
+    window.addEventListener("resize", checkIfMobile);
 
-    return () => window.removeEventListener('resize', checkIfMobile);
+    return () => window.removeEventListener("resize", checkIfMobile);
   }, []);
 
   const toggleSidebar = () => {
@@ -58,15 +58,9 @@ export function Sidebar({ className }: SidebarProps) {
 
   // Define all possible navigation items
   const allNavItems = [
-    { name: 'Home', path: '/', icon: Home },
-    { name: 'Dashboard', path: '/dashboard', icon: BarChart2 },
-    { name: 'KYC Requests', path: '/kvc-requests', icon: FileText },
-    // { name: 'KYC Verification', path: '/kyc-verification', icon: Upload },
-    // { name: 'Payment History', path: '/payment-history', icon: CreditCard },
-    // { name: 'Settings', path: '/settings', icon: Settings },
-    // { name: 'Notifications', path: '/notifications', icon: Bell },
-    // { name: 'Audit Trail', path: '/audit-trail', icon: FileClock },
-    // { name: 'Users', path: '/users', icon: User }, // Assuming this is for admin
+    { name: "Home", path: "/", icon: Home },
+    { name: "Dashboard", path: "/dashboard", icon: BarChart2 },
+    { name: "KYC Requests", path: "/kvc-requests", icon: FileText },
   ];
 
   // Filter navigation items based on user state and KYC verification
@@ -77,7 +71,6 @@ export function Sidebar({ className }: SidebarProps) {
       // navigate("/not-allowed");
       return [];
     }
-
 
     return allNavItems;
   };
@@ -96,19 +89,29 @@ export function Sidebar({ className }: SidebarProps) {
         {collapsed ? <Menu /> : <X />}
       </Button>
 
-      <aside className={cn(
-        "fixed top-0 left-0 z-40 h-full transition-all duration-300 bg-background border-r border-border shadow-sm",
-        collapsed ? (isMobile ? "-translate-x-full" : "w-16") : (isMobile ? "w-64" : "w-64"),
-        isMobile ? "lg:translate-x-0" : "",
-        className
-      )}>
+      <aside
+        className={cn(
+          "fixed top-0 left-0 z-40 h-full transition-all duration-300 bg-background border-r border-border shadow-sm",
+          collapsed
+            ? isMobile
+              ? "-translate-x-full"
+              : "w-16"
+            : isMobile
+            ? "w-64"
+            : "w-64",
+          isMobile ? "lg:translate-x-0" : "",
+          className
+        )}
+      >
         <div className="flex flex-col h-full">
           <div className="p-4">
             <div className="flex items-center gap-2 mb-8">
               <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground font-bold">
                 A
               </div>
-              {!collapsed || isMobile ? <h1 className="text-xl font-bold">Autonance Admin</h1> : null}
+              {!collapsed || isMobile ? (
+                <h1 className="text-xl font-bold">Autonance Admin</h1>
+              ) : null}
             </div>
 
             <nav className="space-y-1">
@@ -129,34 +132,6 @@ export function Sidebar({ className }: SidebarProps) {
             </nav>
           </div>
 
-          <div className="mt-auto p-4 border-t border-border">
-            {/* Always show AI Assistant regardless of user status */}
-            <Button
-              variant="ghost"
-              className={cn(
-                "w-full text-left text-amber-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/30",
-                collapsed && !isMobile ? "justify-center" : "justify-start"
-              )}
-            >
-              <MessageSquare className="w-5 h-5" />
-              {!collapsed || isMobile ? <span className="ml-2">AI Assistant</span> : null}
-            </Button>
-
-            {/* Only show Logout if user exists */}
-            {user && (
-              <Button
-                variant="ghost"
-                className={cn(
-                  "w-full text-muted-foreground mt-2",
-                  collapsed && !isMobile ? "justify-center" : "justify-start"
-                )}
-              >
-                <LogOut className="w-5 h-5" />
-                {!collapsed || isMobile ? <span className="ml-2">Logout</span> : null}
-              </Button>
-            )}
-          </div>
-
           {/* Collapse/Expand Button (only visible on desktop) */}
           <Button
             variant="ghost"
@@ -164,7 +139,12 @@ export function Sidebar({ className }: SidebarProps) {
             onClick={toggleSidebar}
             className="absolute -right-3 top-16 bg-background border border-border rounded-full shadow-sm hidden lg:flex"
           >
-            <ChevronLeft className={cn("w-4 h-4 transition-transform", collapsed ? "rotate-180" : "")} />
+            <ChevronLeft
+              className={cn(
+                "w-4 h-4 transition-transform",
+                collapsed ? "rotate-180" : ""
+              )}
+            />
           </Button>
         </div>
       </aside>
