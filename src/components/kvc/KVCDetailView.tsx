@@ -45,108 +45,71 @@ interface KVCDetailViewProps {
 }
 
 const KVCDetailView: React.FC<KVCDetailViewProps> = ({ onBack, onStatusChange, kycUserDetail, kycDetail }) => {
-  const { id } = useParams<{ id: string }>(); // Get the id from the URL params
+  const { id } = useParams<{ id: string }>(); 
   const [comments, setComments] = useState('');
   const [openDialog, setOpenDialog] = useState<'approve' | 'reject' | null>(null);
   const [activeTab, setActiveTab] = useState("details");
   const { toast } = useToast();
+  const [info, setInfo] = useState<string>('');
+
+  console.log("KYC User Detail:", kycUserDetail,kycDetail);
 
 
-  const handleApprove = () => {
-    if (kycUserDetail) {
-      onStatusChange(kycUserDetail.id, 'VERIFIED', comments);
-      toast({
-        title: "Request Approved",
-        description: `KVC request ${kycUserDetail.requestId} has been approved successfully.`,
-      });
-      setOpenDialog(null);
-      setComments('');
+  useEffect(() => {
+    const fetchInitialStatus = async () => {
+      try {
+        
+        const response = await axios.post('http://localhost:8080/api/kyc/pan-adhar', {
+          pan_url: kycDetail.panFileUrl,
+          aadhaar_url: kycDetail.aadhaarFileUrl,
+          aadhar_no : kycDetail.aadhaarNumber,
+          pan_no : kycDetail.panNumber  
+        }, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });        
+
+        console.log("Initial status:", response.data);
+        if(response.data.error){
+          setInfo(response.data.error);
+        }
+        setInfo(response.data.msg);
+
+      } catch (error) {
+        console.error("Failed to fetch initial status:", error);
+      }
+    };
+  
+    if (id) {
+      fetchInitialStatus();
     }
-  };
+  }, []);
 
-  const handleReject = () => {
-    if (kycUserDetail) {
-      onStatusChange(kycUserDetail.id, 'REJECTED', comments);
-      toast({
-        title: "Request Rejected",
-        description: `KVC request ${kycUserDetail.requestId} has been rejected.`,
-      });
-      setOpenDialog(null);
-      setComments('');
-    }
-  };
-
-  const handleAutomateKycVerification = async () => {
+  const UpdateStatus = async (msg:any) => {
     try {
-      const panImageUrl = kycDetail.panFileUrl;
-
-      const response1 = await axios.post('http://localhost:5000/kyc/pan', {
-        url: panImageUrl
-      }, {
+      const response = await axios.put(`http://localhost:8080/api/kyc/update/${kycUserDetail?.id}`, null, {
+        params: {
+          status: msg,
+          remarks: comments
+        },
         headers: {
           'Content-Type': 'application/json'
         }
       });
-
-      const { message, pan_number } = response1.data;
-
-      if (!pan_number) {
-        console.error("PAN number could not be extracted.");
-        return;
-      }
-
-      const response2 = await axios.post("http://localhost:8082/api/kyc/validate-pan", {
-        pan: pan_number
-      });
-
-      const { statusCode, isAadhaarLinked } = response2.data;
-
-      if (statusCode === 101 && isAadhaarLinked) {
-        console.log("✅ PAN is valid and Aadhaar is linked.");
-
-        const userId = kycDetail.userId;
-        const status = "VERIFIED";
-        const remarks = "Auto-verified as PAN is valid and Aadhaar is linked.";
-
-        try {
-          const updateResponse = await axios.put(`http://localhost:8082/api/kyc/update/${userId}`, null, {
-            params: {
-              status: status,
-              remarks: remarks
-            }
-          });
-          console.log("✅ KYC status updated:", updateResponse.data);
-        } catch (err) {
-          console.error("❌ Failed to update KYC status:", err);
-        }
-      } else {
-        const userId = kycDetail.userId;
-        const status = "REJECTED";
-        const remarks = "PAN Card or AadhaarCard is Invalid";
-
-        try {
-          const updateResponse = await axios.put(`http://localhost:8082/api/kyc/update/${userId}`, null, {
-            params: {
-              status: status,
-              remarks: remarks
-            }
-          });
-          console.log("✅ KYC status updated:", updateResponse.data);
-        } catch (err) {
-          console.error("❌ Failed to update KYC status:", err);
-        }
-      }
-
+  
+      console.log("Status updated:", response.data);
+      window.location.href = '/kvc-requests';
 
 
     } catch (error) {
-      console.error("Error during automated KYC verification:", error);
+      console.error("Failed to update status:", error);
     }
-  };
-
+  }
+  
 
   if (!kycUserDetail) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>; 
   }
 
   return (
@@ -157,16 +120,16 @@ const KVCDetailView: React.FC<KVCDetailViewProps> = ({ onBack, onStatusChange, k
           <h2 className="text-2xl font-bold tracking-tight">KVC Request Details</h2>
           <p className="text-muted-foreground">Request ID: {kycUserDetail.requestId}</p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" onClick={onBack}>
-            Back to All Requests
-          </Button>
-          {activeTab === 'documents' && (
-            <Button variant="secondary" onClick={handleAutomateKycVerification}>
-              Verify KYC
+          <div className="flex items-center gap-2">
+            <Button variant="outline" onClick={onBack}>
+              Back to All Requests
             </Button>
-          )}
-        </div>
+              {activeTab === 'documents' && (
+                  <Button variant="secondary" onClick={() => setOpenDialog('approve')}>
+                    Verify KYC
+                  </Button>
+              )}
+          </div>
       </div>
 
       <div className="flex items-center justify-between">
@@ -177,7 +140,7 @@ const KVCDetailView: React.FC<KVCDetailViewProps> = ({ onBack, onStatusChange, k
       </div>
 
       <Tabs defaultValue="details" value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="w-full sm:w-auto">
+      <TabsList className="w-full sm:w-auto">
           <TabsTrigger value="details" className="flex-1 sm:flex-initial">Personal Details</TabsTrigger>
           <TabsTrigger value="documents" className="flex-1 sm:flex-initial">Documents</TabsTrigger>
         </TabsList>
@@ -282,29 +245,63 @@ const KVCDetailView: React.FC<KVCDetailViewProps> = ({ onBack, onStatusChange, k
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
-                <DocumentPreview
-                  documentUrl={kycUserDetail.documents.idProof}
-                  title="PAN Card"
-                />
-                <DocumentPreview
-                  documentUrl={kycUserDetail.documents.addressProof}
-                  title="Aadhaar Card"
-                />
-                {/* <DocumentPreview
-                documentUrl={kycUserDetail.documents.photo}
-                title="Photograph"
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <DocumentPreview
+                documentUrl={kycUserDetail.documents.idProof}
+                title="Pan Card"
               />
               <DocumentPreview
-                documentUrl={kycUserDetail.documents.signature}
-                title="Signature"
-              /> */}
-
+                documentUrl={kycUserDetail.documents.addressProof}
+                title="Aadhar Card Proof"
+              />
               </div>
             </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
+
+      <Dialog open={openDialog !== null} onOpenChange={(open) => setOpenDialog(open ? 'approve' : null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Provide Remarks</DialogTitle>
+            <DialogDescription>Enter remarks for the verification process</DialogDescription>
+          </DialogHeader>
+          <Textarea
+            value={comments}
+            onChange={(e) => setComments(e.target.value)}
+            placeholder="Enter your remarks here..."
+            rows={4}
+          />
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setOpenDialog(null)}>            
+              Cancel
+            </Button>
+            <Button variant="default" onClick={() => {
+              UpdateStatus("VERIFIED");
+              setOpenDialog(null); // Close the dialog after the status is updated
+            }}
+            disabled={!comments}>
+              Approve
+            </Button>
+            <Button variant="destructive"  onClick={() => {
+              UpdateStatus("REJECTED");
+              setOpenDialog(null); // Close the dialog after the status is updated
+            }} 
+            disabled={!comments}>
+              Reject
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      <div className="mt-6">
+        {info && (
+          <div className="text-red-500 text-sm font-medium">
+            <strong>AI/ML Insights:</strong> {info}
+          </div>
+        )}
+      </div>
+
     </div>
   );
 };

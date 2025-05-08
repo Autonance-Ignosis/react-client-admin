@@ -27,33 +27,25 @@ const DocumentPreview: React.FC<{ documentUrl: string; title: string }> = ({ doc
       <CardHeader>
         <CardTitle className="text-base">{title}</CardTitle>
       </CardHeader>
-      <CardContent className="rounded-md flex flex-col items-center justify-between  px-4 ">
+      <CardContent className="flex flex-col items-center justify-center bg-gray-100 rounded-md p-4">
         {documentUrl ? (
           <>
-            <iframe
-              src={documentUrl}
-              title="Document Preview"
-              className="w-full h-full border rounded-md "
-              sandbox="allow-same-origin allow-scripts"
-            />
-            {/* <div className="flex items-center justify-between w-full">
-              <a
-                href={documentUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-blue-600 text-sm break-all underline max-w-[85%]"
-              >
-                {documentUrl}
-              </a>
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={handleCopy}
-                className="hover:bg-muted p-2"
-              >
-                <ClipboardCopy className="w-4 h-4" />
-              </Button>
-            </div> */}
+            <div className="mb-4">
+              <img
+                src={documentUrl}
+                alt={title}
+                className="w-full h-auto max-w-[300px] max-h-[200px] object-contain rounded-md shadow-md"
+              />
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleCopy}
+              className="w-full sm:w-auto text-sm flex items-center justify-center gap-2 p-2"
+            >
+              <ClipboardCopy className="w-4 h-4" />
+              Copy URL
+            </Button>
           </>
         ) : (
           <p className="text-muted-foreground text-sm text-center w-full">No document available</p>

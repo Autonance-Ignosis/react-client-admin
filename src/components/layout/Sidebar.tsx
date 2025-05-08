@@ -74,7 +74,7 @@ export function Sidebar({ className }: SidebarProps) {
     // If user is null, only show Home
     if (!user || user.role != "ADMIN") {
       // return allNavItems.filter(item => item.name === 'Home');
-      navigate("/not-allowed");
+      // navigate("/not-allowed");
       return [];
     }
 
