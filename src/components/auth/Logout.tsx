@@ -40,7 +40,7 @@ export default function Logout() {
             console.log("Logged out");
         } catch (error) {
             window.location.reload();
-            console.error(error);
+            consolew.error(error);
         }
     };
     return (

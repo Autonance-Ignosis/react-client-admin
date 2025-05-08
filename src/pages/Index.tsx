@@ -1,16 +1,23 @@
-import React from "react";
-import AdminLayout from "../components/layout/AdminLayout";
 import StatsCard from "../components/dashboard/StatsCard";
 import RecentActivity from "../components/dashboard/RecentActivity";
+import { useEffect } from "react";
+import { useState } from "react";
+
+type DashboardStats = {
+  totalRequests: number;
+  pendingRequests: number;
+  approvedRequests: number;
+};
+
 import {
   FileText,
   Users,
   CheckCircle,
   Clock,
   Settings,
-  Activity,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import axios from "axios";
 
 const recentActivities = [
   {
@@ -51,6 +58,31 @@ const recentActivities = [
 ];
 
 const Index = () => {
+
+  const [noofuser, setNoofuser] = useState<number | null>(null);
+
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+
+  useEffect(() => {
+    axios.get<DashboardStats>('http://localhost:8080/api/kyc/stats')
+      .then(res =>{ 
+        console.log(res.data);
+        setStats(res.data)
+      })
+      .catch(err => console.error('Failed to load dashboard stats:', err));
+  }, []);
+  
+
+  useEffect(() => {
+    axios.get('http://localhost:8080/api/user/all')
+      .then(res =>{ 
+        console.log("no of user" + res.data.length);
+        setNoofuser(Number(res.data.length));
+      })
+      .catch(err => console.error('Failed to load dashboard stats:', err));
+  }, []);
+ 
+
   return (
     // <AdminLayout>
     <div className="flex flex-col gap-6">
@@ -62,28 +94,28 @@ const Index = () => {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <StatsCard
           title="📄 Total KVC Requests"
-          value="1,234"
+          value={stats?.totalRequests?.toLocaleString() || "0"}
           change="12% from last month"
           isPositive={true}
           icon={<FileText size={24} className="text-accent" />}
         />
         <StatsCard
           title="🕒 Pending Requests"
-          value="42"
+          value={stats?.pendingRequests?.toLocaleString() || "0"}
           change="4% from last week"
           isPositive={false}
           icon={<Clock size={24} className="text-rbi-pending" />}
         />
         <StatsCard
           title="✅ Approved Requests"
-          value="986"
+          value={stats?.approvedRequests?.toLocaleString() || "0"}
           change="8% from last month"
           isPositive={true}
           icon={<CheckCircle size={24} className="text-rbi-success" />}
         />
         <StatsCard
           title="👥 Registered Users"
-          value="2,456"
+          value={noofuser}
           change="15% from last month"
           isPositive={true}
           icon={<Users size={24} className="text-accent" />}

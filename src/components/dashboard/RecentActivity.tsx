@@ -30,7 +30,11 @@ const RecentActivity: React.FC<RecentActivityProps> = ({ activities }) => {
                 <p className="text-sm text-muted-foreground">{activity.action}</p>
                 <p className="text-xs text-muted-foreground mt-1">{activity.date}</p>
               </div>
-              <RequestStatusBadge status={activity.status} />
+              <RequestStatusBadge status={
+                activity.status === 'approved' ? 'VERIFIED' :
+                activity.status === 'pending' ? 'PENDING' :
+                'REJECTED'
+              } />
             </div>
           ))}
         </div>
