@@ -86,7 +86,7 @@ const Index = () => {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <StatsCard
-          title="📄 Total KVC Requests"
+          title="📄 Total KYC Requests"
           value={stats?.totalRequests?.toLocaleString() || "0"}
           change="12% from last month"
           isPositive={true}
@@ -146,7 +146,9 @@ const Index = () => {
                 className="flex flex-col items-center justify-center p-6 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors"
               >
                 <Clock size={24} className="mb-2 text-rbi-pending" />
-                <span className="text-sm font-medium">🕒 Pending Reviews</span>
+                <span className="text-sm font-medium">
+                  🕒 Pending KYC Review
+                </span>
               </a>
               <a
                 // href="/settings"
