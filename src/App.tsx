@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -19,12 +18,12 @@ import { useSelector } from "react-redux";
 import { MainLayout } from "./components/layout/MainLayout";
 import HomePage from "./pages/Home";
 import NotAllowed from "./pages/NotAllowed";
+import KYCPending from "./pages/KYCPending";
 
 const queryClient = new QueryClient();
 
 const App = () => {
   const dispatch = useDispatch();
-
 
   const loadUser = async () => {
     try {
@@ -45,9 +44,6 @@ const App = () => {
     loadUser();
   }, []);
 
-
-
-
   return (
     <ThemeProvider defaultTheme="light">
       <QueryClientProvider client={queryClient}>
@@ -56,47 +52,66 @@ const App = () => {
           <Sonner />
           <BrowserRouter>
             <Routes>
-
               <Route path="/" element={<MainLayout />}>
+                <Route
+                  index
+                  element={
+                    // <ProtectedRoute>
+                    <HomePage />
+                    // </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/dashboard"
+                  element={
+                    // <ProtectedRoute>
+                    <Index />
+                    // </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/kvc-requests"
+                  element={
+                    <ProtectedRoute>
+                      <KVCRequests />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/kvc-detail/:id"
+                  element={
+                    <ProtectedRoute>
+                      <KVCDetail />
+                    </ProtectedRoute>
+                  }
+                />
 
-                <Route index element={
-                  // <ProtectedRoute>
-                  <HomePage />
-                  // </ProtectedRoute>
-                } />
-                <Route path="/dashboard" element={
-                  // <ProtectedRoute>
-                  <Index />
-                  // </ProtectedRoute>
-                } />
-                <Route path="/kvc-requests" element={
-                  <ProtectedRoute>
-                    <KVCRequests />
-                  </ProtectedRoute>
-                } />
-                <Route path="/kvc-detail/:id" element={
-                  <ProtectedRoute>
-                    <KVCDetail />
-                  </ProtectedRoute>
-                } />
-                <Route path="/users" element={
-                  <ProtectedRoute>
-                    <Users />
-                  </ProtectedRoute>
-                } />
-                <Route path="not-allowed" element={
-                  <NotAllowed />
-                } />
+                <Route
+                  path="/kvc/pending"
+                  element={
+                    <ProtectedRoute>
+                      <KYCPending />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/users"
+                  element={
+                    <ProtectedRoute>
+                      <Users />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path="not-allowed" element={<NotAllowed />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
-
               </Route>
             </Routes>
           </BrowserRouter>
         </TooltipProvider>
       </QueryClientProvider>
-    </ThemeProvider >
-  )
+    </ThemeProvider>
+  );
 };
 
 export default App;

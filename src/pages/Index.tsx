@@ -117,7 +117,7 @@ const Index = () => {
               </a>
 
               <a
-                href="/kvc-requests?status=pending"
+                href="/kvc/pending"
                 className="flex flex-col items-center justify-center p-6 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors"
               >
                 <Clock size={24} className="mb-2 text-rbi-pending" />

@@ -1,25 +1,21 @@
-
-import { Bell, Search, LogIn, LogOut } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Bell, Search, LogIn, LogOut } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger
-} from '@/components/ui/dropdown-menu';
-import LoginButton from '../auth/Login';
-import { useSelector } from 'react-redux';
-import Logout from '../auth/Logout';
-import { ThemeToggle } from '../theme/ThemeToggle';
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import LoginButton from "../auth/Login";
+import { useSelector } from "react-redux";
+import Logout from "../auth/Logout";
+import { ThemeToggle } from "../theme/ThemeToggle";
 
 export function Header() {
-
   const { user } = useSelector((state: any) => state.user) || {};
-
-
 
   return (
     <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-sm border-b border-border">
@@ -38,12 +34,10 @@ export function Header() {
         </div>
 
         <div className="flex flex-1 items-center justify-end space-x-4">
-
-
           <div className="flex items-center gap-2">
             <ThemeToggle />
 
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="relative">
                   <Bell className="h-5 w-5" />
@@ -69,19 +63,9 @@ export function Header() {
                   </DropdownMenuItem>
                 </div>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
 
-            {
-              user ? (
-                <Logout />
-              )
-                : (
-                  <LoginButton />
-                )
-            }
-
-
-
+            {user ? <Logout /> : <LoginButton />}
           </div>
         </div>
       </div>
