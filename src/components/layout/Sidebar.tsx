@@ -60,7 +60,7 @@ export function Sidebar({ className }: SidebarProps) {
   const allNavItems = [
     { name: "Home", path: "/", icon: Home },
     { name: "Dashboard", path: "/dashboard", icon: BarChart2 },
-    { name: "KYC Requests", path: "/kvc-requests", icon: FileText },
+    { name: "KYC Requests", path: "/kvc/pending", icon: FileText },
   ];
 
   // Filter navigation items based on user state and KYC verification

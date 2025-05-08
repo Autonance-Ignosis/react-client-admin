@@ -9,13 +9,7 @@ type DashboardStats = {
   approvedRequests: number;
 };
 
-import {
-  FileText,
-  Users,
-  CheckCircle,
-  Clock,
-  Settings,
-} from "lucide-react";
+import { FileText, Users, CheckCircle, Clock, Settings } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import axios from "axios";
 
@@ -58,30 +52,29 @@ const recentActivities = [
 ];
 
 const Index = () => {
-
   const [noofuser, setNoofuser] = useState<number | null>(null);
 
   const [stats, setStats] = useState<DashboardStats | null>(null);
 
   useEffect(() => {
-    axios.get<DashboardStats>('http://localhost:8080/api/kyc/stats')
-      .then(res =>{ 
+    axios
+      .get<DashboardStats>("http://localhost:8080/api/kyc/stats")
+      .then((res) => {
         console.log(res.data);
-        setStats(res.data)
+        setStats(res.data);
       })
-      .catch(err => console.error('Failed to load dashboard stats:', err));
+      .catch((err) => console.error("Failed to load dashboard stats:", err));
   }, []);
-  
 
   useEffect(() => {
-    axios.get('http://localhost:8080/api/user/all')
-      .then(res =>{ 
+    axios
+      .get("http://localhost:8080/api/user/all")
+      .then((res) => {
         console.log("no of user" + res.data.length);
         setNoofuser(Number(res.data.length));
       })
-      .catch(err => console.error('Failed to load dashboard stats:', err));
+      .catch((err) => console.error("Failed to load dashboard stats:", err));
   }, []);
- 
 
   return (
     // <AdminLayout>
@@ -141,7 +134,7 @@ const Index = () => {
                 <span className="text-sm font-medium">📄 View Requests</span>
               </a>
               <a
-                href="/users"
+                // href="/users"
                 className="flex flex-col items-center justify-center p-6 bg-secondary/60 rounded-lg shadow-md border"
               >
                 <Users size={28} className="mb-2 text-primary" />
@@ -156,7 +149,7 @@ const Index = () => {
                 <span className="text-sm font-medium">🕒 Pending Reviews</span>
               </a>
               <a
-                href="/settings"
+                // href="/settings"
                 className="flex flex-col items-center justify-center p-6 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors"
               >
                 <Settings size={24} className="mb-2 text-rbi-success" />
