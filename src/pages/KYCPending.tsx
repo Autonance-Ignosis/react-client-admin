@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import AdminLayout from "../components/layout/AdminLayout";
 import KVCRequestList, { IKVCRequest } from "../components/kvc/KVCRequestList";
 import axios from "axios";
+import KYCRequestList from "@/components/kvc/KYCRequestList";
 
 const KVCRequests = () => {
   const [KycRequests, setKycRequests] = useState<IKVCRequest[]>([]);
@@ -38,7 +39,9 @@ const KVCRequests = () => {
         </p>
       </div>
 
-      <KVCRequestList requests={KycRequests} />
+      <KYCRequestList requests={KycRequests}></KYCRequestList>
+
+      {/* <KVCRequestList requests={KycRequests} /> */}
     </div>
   );
 };
