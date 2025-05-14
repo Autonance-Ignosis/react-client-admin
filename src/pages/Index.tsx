@@ -12,6 +12,7 @@ type DashboardStats = {
 import { FileText, Users, CheckCircle, Clock, Settings } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const recentActivities = [
   {
@@ -116,7 +117,7 @@ const Index = () => {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        <RecentActivity activities={recentActivities} />
+        {/* <RecentActivity activities={recentActivities} /> */}
 
         <Card>
           <CardHeader className="pb-3">
@@ -126,35 +127,36 @@ const Index = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <a
-                href="/kvc-requests"
+              <Link
+                to="/kvc-requests"
                 className="flex flex-col items-center justify-center p-6 bg-secondary/60 rounded-lg shadow-md border"
               >
                 <FileText size={28} className="mb-2 text-primary" />
                 <span className="text-sm font-medium">📄 View Requests</span>
-              </a>
-              <a
-                // href="/users"
+              </Link>
+              {/* <Link
+                // to="/kvc-requests"
+                href="/users"
                 className="flex flex-col items-center justify-center p-6 bg-secondary/60 rounded-lg shadow-md border"
               >
                 <Users size={28} className="mb-2 text-primary" />
                 <span className="text-sm font-medium">👥 Manage Users</span>
-              </a>
+              </Link> */}
 
-              <a
-                href="/kvc/pending"
+              <Link
+                to="/kvc/pending"
                 className="flex flex-col items-center justify-center p-6 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors"
               >
                 <Clock size={24} className="mb-2 text-rbi-pending" />
                 <span className="text-sm font-medium">🕒 Pending Reviews</span>
-              </a>
-              <a
+              </Link>
+              {/* <a
                 // href="/settings"
                 className="flex flex-col items-center justify-center p-6 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors"
               >
                 <Settings size={24} className="mb-2 text-rbi-success" />
                 <span className="text-sm font-medium">📊 View Reports</span>
-              </a>
+              </a> */}
             </div>
           </CardContent>
         </Card>
